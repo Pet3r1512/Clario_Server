@@ -1,5 +1,7 @@
+import { trpcServer } from '@hono/trpc-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { appRouter } from './server/_index'
 
 const app = new Hono()
 
@@ -16,4 +18,10 @@ app.use("/api/auth/**",
     credentials: true
   })
 )
+
+app.use("/trpc/*", cors(),
+  trpcServer({
+    router: appRouter
+  }))
+
 export default app
