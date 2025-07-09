@@ -6,8 +6,11 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
+    "@hono/trpc-server": "^0.4.0",
     "@prisma/client": "^6.11.0",
     "@prisma/extension-accelerate": "^2.0.1",
+    "@trpc/client": "^11.4.3",
+    "@trpc/server": "^11.4.3",
     "better-auth": "^1.2.12",
     "hono": "^4.7.11"
   },
