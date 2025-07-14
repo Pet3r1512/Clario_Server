@@ -2,13 +2,15 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "clarioserver",
   "main": "src/index.ts",
-  "compatibility_date": "2025-06-14"
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
+  "compatibility_date": "2025-06-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "NODE_ENV": "development",
+    "PORT": "9999",
+    "LOG_LEVEL": "info",
+    "BETTER_AUTH_URL": "http://localhost:5173",
+    "TRUSTED_ORIGIN": "http://localhost:5173"
+  }
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",

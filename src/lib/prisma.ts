@@ -1,13 +1,13 @@
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient } from "@/generated/prisma/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 
-const globalForPrisma = global as unknown as {
-    prisma: PrismaClient;
-};
+// Ensure env is loaded if not already
+if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is not defined in environment variables.");
+}
 
-const prisma =
-    globalForPrisma.prisma || new PrismaClient().$extends(withAccelerate());
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+const prisma = new PrismaClient({
+    datasourceUrl: process.env.DATABASE_URL,
+}).$extends(withAccelerate());
 
 export default prisma;
