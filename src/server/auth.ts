@@ -1,6 +1,6 @@
 import z from "zod"
 import { auth } from "@/lib/auth"
-import { publicProcedure, router } from "./trpc"
+import { publicProcedure, router } from "./tRPC"
 
 export const authRouter = router({
     signUpViaEmail: publicProcedure.input(z.object({
