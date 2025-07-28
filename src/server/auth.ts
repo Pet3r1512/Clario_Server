@@ -18,6 +18,23 @@ export const authRouter = router({
             return { status: 400, message: "Error" }
         }
         return { status: 200, message: "Sign Up Done" }
+    }),
+    signInViaEmail: publicProcedure.input(z.object({
+        email: z.email("Invalid Email"),
+        password: z.string().min(1, "Password cannot be empty")
+    })).mutation(async ({ input }) => {
+        const { email, password } = input
+        const response = await auth.api.signInEmail({
+            body: {
+                email, password
+            }
+        })
+        if (!response) {
+            return {
+                status: 400, message: "Error"
+            }
+        }
+        return { status: 200, message: "Sign In Done" }
     })
 })
 
