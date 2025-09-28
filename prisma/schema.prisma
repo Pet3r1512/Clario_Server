@@ -7,17 +7,16 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id
+  id            String         @id
   name          String
   email         String
   emailVerified Boolean
@@ -26,6 +25,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  Transactions  Transactions[]
 
   @@unique([email])
   @@map("user")
@@ -74,4 +74,27 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+model Categories {
+  id          Int          @id
+  name        String
+  type        CategoryType
+  description String?
+}
+
+model Transactions {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  amount      Int
+  type        CategoryType
+  description String?
+  date        DateTime
+  createdAt   DateTime     @default(now())
 }
