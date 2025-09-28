@@ -7,7 +7,7 @@ export const transactionsRouter = router({
         const response = await prisma.categories.create({
             data: {
                 id: 1,
-                name: "Demo",
+                name: "Demo 1",
                 type: "INCOME",
                 description: "demo desc"
             }
