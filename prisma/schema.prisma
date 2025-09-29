@@ -9,18 +9,17 @@ datasource db {
 }
 
 model User {
-  id            String         @id
+  id            String        @id
   name          String
-  email         String         @unique
+  email         String        @unique
   emailVerified Boolean
   image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  Transactions  Transactions[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  transactions  Transaction[]
   accounts      Account[]
   sessions      Session[]
+  categories    Category[]
 
   @@map("user")
 }
@@ -59,33 +58,39 @@ model Account {
 }
 
 model Verification {
-  id         String    @id
+  id         String   @id
   identifier String
   value      String
   expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("verification")
 }
 
-model Categories {
-  id          Int          @id
-  name        String
-  type        CategoryType
-  description String?
+model Category {
+  id           Int           @id @default(autoincrement())
+  userId       String? //If null => default global category
+  name         String
+  type         CategoryType
+  description  String?
+  user         User?         @relation(fields: [userId], references: [id])
+  transactions Transaction[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
 
-model Transactions {
-  id          String       @id @default(cuid())
+model Transaction {
+  id          String            @id @default(cuid())
   userId      String
-  amount      Int
-  type        CategoryType
+  categoryId  Int?
+  amount      Decimal           @db.Decimal(10, 2)
+  currency    SupportedCurrency @default(AUD)
   description String?
   date        DateTime
-  user        User         @relation(fields: [userId], references: [id])
+  createdAt   DateTime          @default(now())
+  user        User              @relation(fields: [userId], references: [id])
+  category    Category?         @relation(fields: [categoryId], references: [id])
 }
 
 enum CategoryType {
