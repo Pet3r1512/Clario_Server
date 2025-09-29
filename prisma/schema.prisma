@@ -89,3 +89,9 @@ enum CategoryType {
   INCOME
   EXPENSE
 }
+
+enum SupportedCurrency {
+  USD
+  AUD
+  VND
+}
