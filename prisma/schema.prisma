@@ -17,6 +17,8 @@ model User {
   createdAt     DateTime
   updatedAt     DateTime
   Transactions  Transactions[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   accounts      Account[]
   sessions      Session[]
 
@@ -49,8 +51,8 @@ model Account {
   refreshTokenExpiresAt DateTime?
   scope                 String?
   password              String?
-  createdAt             DateTime
-  updatedAt             DateTime
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
@@ -72,6 +74,8 @@ model Categories {
   name        String
   type        CategoryType
   description String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Transactions {
@@ -81,7 +85,6 @@ model Transactions {
   type        CategoryType
   description String?
   date        DateTime
-  createdAt   DateTime     @default(now())
   user        User         @relation(fields: [userId], references: [id])
 }
 
