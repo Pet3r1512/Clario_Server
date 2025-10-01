@@ -26,7 +26,7 @@ export const authRouter = router({
         const { email, password } = input
         const response = await auth.api.signInEmail({
             body: {
-                email, password
+                email, password, callbackURL: process.env.TRUSTED_ORIGIN || "http://localhost:5173/dashboard"
             }
         })
         if (!response) {
@@ -34,7 +34,7 @@ export const authRouter = router({
                 status: 400, message: "Error"
             }
         }
-        return { status: 200, message: "Sign In Done" }
+        return { status: 200, message: "Sign In Done", resonse: response }
     })
 })
 
