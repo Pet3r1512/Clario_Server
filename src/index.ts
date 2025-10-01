@@ -14,7 +14,7 @@ app.get('/', (c) => {
 })
 
 app.use("/api/auth/**", async (c, next) => {
-  const trustedOrigin = env<{ TRUSTED_ORIGIN: string }>(c).TRUSTED_ORIGIN || "http://localhost:5173";
+  const trustedOrigin = env<{ TRUSTED_ORIGIN: string }>(c).TRUSTED_ORIGIN || "https://clario-web.pages.dev";
   cors({
     origin: trustedOrigin,
     allowHeaders: ["Content-Type", "Authorization"],
