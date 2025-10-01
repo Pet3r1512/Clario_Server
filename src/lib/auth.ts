@@ -3,7 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import prisma from './prisma'
 
 export const auth = betterAuth({
-    baseURL: process.env.NODE_ENV === "production" ? "https://clarioserver.peter1512-dev.workers.dev" : "http://localhost:8787",
+    baseURL: process.env.BASE_URL || "http://localhost:8787",
     basePath: "/api/auth",
     database: prismaAdapter(prisma, {
         provider: 'postgresql',

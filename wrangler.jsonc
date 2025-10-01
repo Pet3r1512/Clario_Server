@@ -9,7 +9,8 @@
     "PORT": "9999",
     "LOG_LEVEL": "info",
     "BETTER_AUTH_URL": "https://clario-web.pages.dev",
-    "TRUSTED_ORIGIN": "https://clario-web.pages.dev"
+    "TRUSTED_ORIGIN": "https://clario-web.pages.dev",
+    "BASE_URL": "https://clarioserver.peter1512-dev.workers.dev"
   }
   // "kv_namespaces": [
   //   {
