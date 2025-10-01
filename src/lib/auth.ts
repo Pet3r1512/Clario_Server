@@ -15,29 +15,29 @@ export const auth = betterAuth({
         expiresIn: 60 * 60 * 24 * 7 //.    7 days
     },
     trustedOrigins: [process.env.TRUSTED_ORIGIN || "http://localhost:5173"],
-    advanced: {
-        useSecureCookies: process.env.NODE_ENV === "production",
-        crossSubDomainCookies: {
-            enabled: true,
-        },
-        defaultCookieAttributes: {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "none",
-            path: "/"
-        },
-        cookies: {
-            session_token: {
-                name: "Clario",
-                attributes: {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite: "none",
-                    path: "/"
-                }
-            }
-        }
-    },
+    // advanced: {
+    //     useSecureCookies: process.env.NODE_ENV === "production",
+    //     crossSubDomainCookies: {
+    //         enabled: true,
+    //     },
+    //     defaultCookieAttributes: {
+    //         httpOnly: true,
+    //         secure: process.env.NODE_ENV === "production",
+    //         sameSite: "none",
+    //         path: "/"
+    //     },
+    //     cookies: {
+    //         session_token: {
+    //             name: "Clario",
+    //             attributes: {
+    //                 httpOnly: true,
+    //                 secure: process.env.NODE_ENV === "production",
+    //                 sameSite: "none",
+    //                 path: "/"
+    //             }
+    //         }
+    //     }
+    // },
 })
 
 export default auth
