@@ -5,11 +5,11 @@
   "compatibility_date": "2025-06-14",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
-    "NODE_ENV": "development",
+    "NODE_ENV": "production",
     "PORT": "9999",
     "LOG_LEVEL": "info",
-    "BETTER_AUTH_URL": "http://localhost:5173",
-    "TRUSTED_ORIGIN": "http://localhost:5173"
+    "BETTER_AUTH_URL": "https://clario-web.pages.dev",
+    "TRUSTED_ORIGIN": "https://clario-web.pages.dev"
   }
   // "kv_namespaces": [
   //   {
