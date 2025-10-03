@@ -16,16 +16,19 @@ app.get('/', (c) => {
 
 })
 
-app.use("/api/auth/**", async (c, next) => {
+app.use('*', async (c, next) => {
   const trustedOrigin = env<{ TRUSTED_ORIGIN: string }>(c).TRUSTED_ORIGIN || "https://clario-web.pages.dev";
-  cors({
+
+  const corsMiddleware = cors({
     origin: trustedOrigin,
     allowHeaders: ["Content-Type", "Authorization"],
     exposeHeaders: ["Content-Type"],
     maxAge: 600,
     credentials: true
-  })(c, next);
-})
+  });
+
+  return corsMiddleware(c, next);
+});
 
 app.use("/trpc/*", cors(),
   trpcServer({
