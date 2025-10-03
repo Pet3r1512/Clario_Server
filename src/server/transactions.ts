@@ -34,5 +34,12 @@ export const transactionsRouter = router({
                 categoryId: foodCategory?.id ?? undefined,
             }
         })
+    }),
+    getTransactions: publicProcedure.query(async ({ }) => {
+        await prisma.$connect()
+        const transactions = await prisma.transaction.findMany()
+
+        prisma.$disconnect()
+        return { transactions: transactions }
     })
 })
