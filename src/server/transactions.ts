@@ -3,7 +3,6 @@ import { publicProcedure, router } from "./tRPC";
 
 export const transactionsRouter = router({
     createDefaultCategories: publicProcedure.mutation(async ({ }) => {
-        await prisma.$connect()
         const USER_ID = "Wm1zO1KHImNFRWpPxbJ3kQ2UoU7pA0Bg"
 
         const salaryCategory = await prisma.category.findFirst({
@@ -36,10 +35,8 @@ export const transactionsRouter = router({
         })
     }),
     getTransactions: publicProcedure.query(async ({ }) => {
-        await prisma.$connect()
         const transactions = await prisma.transaction.findMany()
 
-        prisma.$disconnect()
         return { transactions: transactions }
     })
 })
