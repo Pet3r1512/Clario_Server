@@ -7,6 +7,9 @@ import { env } from 'hono/adapter';
 
 const app = new Hono()
 
+console.log("BASE_URL:", process.env.BASE_URL);
+console.log("TRUSTED_ORIGIN:", process.env.TRUSTED_ORIGIN);
+
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
