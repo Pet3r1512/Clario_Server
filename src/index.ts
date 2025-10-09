@@ -3,36 +3,40 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { appRouter } from './server/_index'
 import 'dotenv/config';
-import { env } from 'hono/adapter';
+
+const TRUSTED_ORIGIN = [
+  "http://localhost:5173",  // for local dev
+  "https://clario-web.pages.dev", // production
+];
 
 const app = new Hono()
-
-console.log("BASE_URL:", process.env.BASE_URL);
-console.log("TRUSTED_ORIGIN:", process.env.TRUSTED_ORIGIN);
-
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 
 })
 
-app.use('*', async (c, next) => {
-  const trustedOrigin = env<{ TRUSTED_ORIGIN: string }>(c).TRUSTED_ORIGIN || "https://clario-web.pages.dev";
-
-  const corsMiddleware = cors({
-    origin: trustedOrigin,
-    allowHeaders: ["Content-Type", "Authorization"],
+app.use(
+  "*",
+  cors({
+    origin: (origin) => {
+      if (!origin) return TRUSTED_ORIGIN[0]; // allow server-to-server requests
+      return TRUSTED_ORIGIN.includes(origin) ? origin : TRUSTED_ORIGIN[0];
+    },
+    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
     exposeHeaders: ["Content-Type"],
+    credentials: true,
     maxAge: 600,
-    credentials: true
-  });
+  })
+);
 
-  return corsMiddleware(c, next);
-});
-
-app.use("/trpc/*", cors(),
+// Apply tRPC only once — no extra cors()
+app.use(
+  "/trpc/*",
   trpcServer({
-    router: appRouter
-  }))
+    router: appRouter,
+  })
+);
 
-export default app
+export default app;
+
