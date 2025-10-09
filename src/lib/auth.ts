@@ -11,10 +11,33 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true
     },
+    trustedOrigins: [process.env.TRUSTED_ORIGIN || "https://clario-web.pages.dev"],
     session: {
         expiresIn: 60 * 60 * 24 * 7 //.    7 days
     },
-    trustedOrigins: [process.env.TRUSTED_ORIGIN || "https://clario-web.pages.dev"],
+    advanced: {
+        useSecureCookies: process.env.NODE_ENV === "production",
+        crossSubDomainCookies: {
+            enabled: true,
+        },
+        defaultCookieAttributes: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            path: "/"
+        },
+        cookies: {
+            session_token: {
+                name: "Clario",
+                attributes: {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                    path: "/"
+                }
+            }
+        }
+    },
 })
 
 export default auth
