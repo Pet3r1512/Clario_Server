@@ -1,6 +1,7 @@
 import z from "zod"
 import { auth } from "@/lib/auth"
 import { publicProcedure, router } from "./tRPC"
+import cookie from 'cookie'
 
 export const authRouter = router({
     signUpViaEmail: publicProcedure.input(z.object({
@@ -22,7 +23,7 @@ export const authRouter = router({
     signInViaEmail: publicProcedure.input(z.object({
         email: z.email("Invalid Email"),
         password: z.string().min(1, "Password cannot be empty")
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ input, ctx }) => {
         const { email, password } = input
         const response = await auth.api.signInEmail({
             body: {
@@ -34,7 +35,20 @@ export const authRouter = router({
                 status: 400, message: "Error"
             }
         }
-        return { status: 200, message: "Sign In Done", resonse: response }
+
+        const token = response.token
+
+        if (token && ctx.res) {
+            ctx.res.setHeader("Set-Cookie", cookie.serialize("session_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: 60 * 60 ^ 24 * 7 //7 days
+            }))
+        }
+
+        return { status: 200, message: "Sign In Done" }
     })
 })
 
