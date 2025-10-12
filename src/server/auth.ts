@@ -25,10 +25,11 @@ export const authRouter = router({
         password: z.string().min(1, "Password cannot be empty")
     })).mutation(async ({ input, ctx }) => {
         const { email, password } = input
-        const response = await auth.api.signInEmail({
+        const { headers, response } = await auth.api.signInEmail({
+            returnHeaders: true,
             body: {
                 email, password
-            }
+            },
         })
         if (!response) {
             return {
@@ -36,16 +37,10 @@ export const authRouter = router({
             }
         }
 
-        const token = response.token
+        const setCookie = headers.get("set-cookie")
 
-        if (token && ctx.res) {
-            ctx.res.setHeader("Set-Cookie", cookie.serialize("session_token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-                maxAge: 60 * 60 ^ 24 * 7 //7 days
-            }))
+        if (setCookie && ctx.resHeaders) {
+            ctx.resHeaders.set("Set-Cookie", setCookie);
         }
 
         return { status: 200, message: "Sign In Done" }
