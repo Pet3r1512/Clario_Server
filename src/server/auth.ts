@@ -1,6 +1,7 @@
 import z from "zod"
 import { auth } from "@/lib/auth"
 import { publicProcedure, router } from "./tRPC"
+import cookie from 'cookie'
 
 export const authRouter = router({
     signUpViaEmail: publicProcedure.input(z.object({
@@ -22,20 +23,46 @@ export const authRouter = router({
     signInViaEmail: publicProcedure.input(z.object({
         email: z.email("Invalid Email"),
         password: z.string().min(1, "Password cannot be empty")
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ input, ctx }) => {
         const { email, password } = input
-        const response = await auth.api.signInEmail({
+        const { headers, response } = await auth.api.signInEmail({
+            returnHeaders: true,
             body: {
                 email, password
-            }
+            },
         })
         if (!response) {
             return {
                 status: 400, message: "Error"
             }
         }
-        return { status: 200, message: "Sign In Done", resonse: response }
-    })
+
+        const setCookie = headers.get("set-cookie")
+
+        if (setCookie && ctx.resHeaders) {
+            ctx.resHeaders.set("Set-Cookie", setCookie);
+        }
+
+        return { status: 200, message: "Sign In Done" }
+    }),
+    getSession: publicProcedure.mutation(async ({ ctx }) => {
+        const session = await ctx.auth.api.getSession({
+            headers: ctx.req.headers,
+            query: {
+                disableCookieCache: true,
+            },
+        });
+
+        if (!session) {
+            return { status: 401, message: 'No active session' };
+        }
+
+        return {
+            status: 200,
+            message: 'Session retrieved',
+            data: session,
+        };
+    }),
 })
 
 export default authRouter

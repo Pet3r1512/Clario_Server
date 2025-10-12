@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "clarioserver",
-  "main": "src/index.ts",
+  "main": "src/server/server.ts",
   "compatibility_date": "2025-06-14",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {

@@ -1,38 +1,47 @@
-import { trpcServer } from '@hono/trpc-server'
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import { appRouter } from './server/_index'
+import { trpcServer } from '@hono/trpc-server';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { appRouter } from './server/_index';
+import { auth } from './lib/auth';
 import 'dotenv/config';
-import { env } from 'hono/adapter';
 
-const app = new Hono()
+const TRUSTED_ORIGIN = [
+  "http://localhost:5173",
+  "https://clario-web.pages.dev",
+];
 
-console.log("BASE_URL:", process.env.BASE_URL);
-console.log("TRUSTED_ORIGIN:", process.env.TRUSTED_ORIGIN);
+const app = new Hono();
 
+app.get('/', (c) => c.text('Hello Hono!'));
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-
-})
-
-app.use('*', async (c, next) => {
-  const trustedOrigin = env<{ TRUSTED_ORIGIN: string }>(c).TRUSTED_ORIGIN || "https://clario-web.pages.dev";
-
-  const corsMiddleware = cors({
-    origin: trustedOrigin,
-    allowHeaders: ["Content-Type", "Authorization"],
-    exposeHeaders: ["Content-Type"],
+app.use(
+  "*",
+  cors({
+    origin: (origin) => {
+      if (!origin) return TRUSTED_ORIGIN[0];
+      return TRUSTED_ORIGIN.includes(origin) ? origin : TRUSTED_ORIGIN[0];
+    },
+    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposeHeaders: ["Content-Type", "Set-Cookie"],
+    credentials: true,
     maxAge: 600,
-    credentials: true
-  });
+  })
+);
 
-  return corsMiddleware(c, next);
-});
-
-app.use("/trpc/*", cors(),
+app.use(
+  "/trpc/*",
   trpcServer({
-    router: appRouter
-  }))
+    router: appRouter,
+    createContext: (c) => {
+      const resHeaders = new Headers();
+      return {
+        headers: Object.fromEntries(c.req.headers),
+        auth,
+        resHeaders,
+      };
+    },
+  })
+);
 
-export default app
+
+export default app;
