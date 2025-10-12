@@ -11,24 +11,30 @@ const TRUSTED_ORIGINS = [
 
 const app = new Hono();
 
-app.use('*', cors({
-  origin: TRUSTED_ORIGINS,
-  allowHeaders: ["Content-Type", "Authorization", "Cookie"],
-  exposeHeaders: ["Content-Type", "Set-Cookie"],
-  credentials: true,
-  maxAge: 600,
-}));
+app.use(
+  '*',
+  cors({
+    origin: TRUSTED_ORIGINS,
+    allowHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Access-Control-Request-Headers'],
+    exposeHeaders: ['Content-Type', 'Set-Cookie'],
+    credentials: true,
+    maxAge: 86400,
+  })
+);
 
-app.use('/trpc/*', trpcServer({
-  router: appRouter,
-  createContext: (c) => {
-    const resHeaders = new Headers();
-    return {
-      headers: Object.fromEntries(c.req.headers),
-      auth,
-      resHeaders,
-    };
-  },
-}));
+app.use(
+  '/trpc/*',
+  trpcServer({
+    router: appRouter,
+    createContext: (c) => {
+      const resHeaders = new Headers();
+      return {
+        headers: Object.fromEntries(c.req.headers),
+        auth,
+        resHeaders,
+      };
+    },
+  })
+);
 
 export default app;
