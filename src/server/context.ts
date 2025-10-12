@@ -1,7 +1,11 @@
-import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import { auth } from "@/lib/auth";
 
-export function createContext({ req, res }: CreateExpressContextOptions) {
-    return { req, res };
-}
+export const createContext = (opts: { req: Request; resHeaders: Headers }) => {
+    return {
+        req: opts.req,
+        resHeaders: opts.resHeaders,
+        auth,
+    };
+};
 
-export type Context = ReturnType<typeof createContext>;
+export type Context = Awaited<ReturnType<typeof createContext>>;
