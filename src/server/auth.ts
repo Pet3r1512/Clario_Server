@@ -44,7 +44,25 @@ export const authRouter = router({
         }
 
         return { status: 200, message: "Sign In Done" }
-    })
+    }),
+    getSession: publicProcedure.mutation(async ({ ctx }) => {
+        const session = await ctx.auth.api.getSession({
+            headers: ctx.req.headers,
+            query: {
+                disableCookieCache: true,
+            },
+        });
+
+        if (!session) {
+            return { status: 401, message: 'No active session' };
+        }
+
+        return {
+            status: 200,
+            message: 'Session retrieved',
+            data: session,
+        };
+    }),
 })
 
 export default authRouter
