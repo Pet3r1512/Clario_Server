@@ -17,7 +17,7 @@ export const auth = betterAuth({
     },
     cookieOptions: {
         secure: false,
-        sameSite: "lax",
+        sameSite: "none",
         path: "/",
     },
     // advanced: {
