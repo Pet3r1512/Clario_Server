@@ -17,38 +17,23 @@ export const auth = betterAuth({
     },
     cookieOptions: {
         secure: false,
-        sameSite: "none",
+        sameSite: "lax",
         path: "/",
     },
-    // advanced: {
-    //     useSecureCookies: process.env.NODE_ENV === "production",
-    //     crossSubDomainCookies: {
-    //         enabled: true,
-    //     },
-    //     defaultCookieAttributes: {
-    //         httpOnly: true,
-    //         secure: process.env.NODE_ENV === "production",
-    //         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    //         path: "/"
-    //     },
-    //     cookies: {
-    //         session_token: {
-    //             name: "Clario",
-    //             attributes: {
-    //                 httpOnly: true,
-    //                 secure: process.env.NODE_ENV === "production",
-    //                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    //                 path: "/"
-    //             }
-    //         }
-    //     }
-    // },
-    adapter: {
-        fetch: async (request: string | Request | URL) => {
-            const response = await fetch(request);
-            return new Response(await response.text(), response);
+    advanced: {
+        crossSubDomainCookies: {
+            enabled: true
         },
-    },
+        cookies: {
+            sessionToken: {
+                attributes: {
+                    sameSite: "none",
+                    secure: true,
+                    partitioned: true
+                }
+            }
+        }
+    }
 })
 
 export default auth
