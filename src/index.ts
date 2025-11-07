@@ -23,6 +23,18 @@ app.use(
   })
 );
 
+app.get('/', (c) => {
+  return c.text("Hello")
+})
+
+app.use(
+  "/trpc/*",
+  trpcServer({
+    endpoint: "/api/trpc",
+    router: appRouter,
+  })
+);
+
 app.all("/api/auth/*", (c) => auth.handler(c.req.raw));
 
 app.use("*", async (c, next) => {
@@ -31,15 +43,10 @@ app.use("*", async (c, next) => {
   c.set("user", session?.user ?? null);
   c.set("session", session?.session ?? null);
 
+  console.log(session)
+
   await next();
 });
-
-app.use(
-  "/trpc/*",
-  trpcServer({
-    router: appRouter,
-  })
-);
 
 app.get("/session", (c) => {
   const session = c.get("session");
