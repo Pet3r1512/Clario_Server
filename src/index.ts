@@ -21,11 +21,7 @@ const app = new Hono<{
 app.use(
   "*",
   cors({
-    origin: (origin) => {
-      if (!origin) return "*";
-      if (allowedOrigins.includes(origin)) return origin;
-      return undefined;
-    },
+    origin: allowedOrigins,
     allowHeaders: [
       "Content-Type",
       "Authorization",
