@@ -4,7 +4,6 @@ import { trpcServer } from "@hono/trpc-server";
 import { appRouter } from "./server/_index";
 import auth from "./lib/auth";
 import "dotenv/config";
-import { env } from "./env";
 
 const app = new Hono<{
   Variables: {
@@ -16,7 +15,7 @@ const app = new Hono<{
 app.use(
   "*",
   cors({
-    origin: env?.NODE_ENV === "production" ? "https://clario-web.pages.dev" : "http://localhost:5173",
+    origin: "https://clario-web.pages.dev",
     allowHeaders: [
       "Content-Type",
       "Authorization",
