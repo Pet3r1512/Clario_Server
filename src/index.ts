@@ -5,12 +5,6 @@ import { appRouter } from "./server/_index";
 import auth from "./lib/auth";
 import "dotenv/config";
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "https://clario-web.pages.dev",
-];
-
 const app = new Hono<{
   Variables: {
     user: typeof auth.$Infer.Session.user | null;
@@ -21,7 +15,7 @@ const app = new Hono<{
 app.use(
   "*",
   cors({
-    origin: allowedOrigins,
+    origin: "https://clario-web.pages.dev",
     allowHeaders: [
       "Content-Type",
       "Authorization",
