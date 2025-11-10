@@ -15,8 +15,8 @@ const app = new Hono<{
 app.use(
   "*",
   cors({
-    // origin: "https://clario-web.pages.dev",
-    origin: "http://localhost:5173",
+    origin: "https://clario-web.pages.dev",
+    // origin: "http://localhost:5173",
     allowHeaders: [
       "Content-Type",
       "Authorization",
