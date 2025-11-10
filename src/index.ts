@@ -1,8 +1,15 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { trpcServer } from "@hono/trpc-server";
-import auth from "./lib/auth";
 import { appRouter } from "./server/_index";
+import auth from "./lib/auth";
+import "dotenv/config";
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://clario-web.pages.dev",
+];
 
 const app = new Hono<{
   Variables: {
@@ -14,11 +21,11 @@ const app = new Hono<{
 app.use(
   "*",
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "https://clario-web.pages.dev",
-    ],
+    origin: (origin) => {
+      if (!origin) return "*";
+      if (allowedOrigins.includes(origin)) return origin;
+      return undefined;
+    },
     allowHeaders: [
       "Content-Type",
       "Authorization",
@@ -32,11 +39,14 @@ app.use(
     exposeHeaders: ["Content-Length", "Set-Cookie"],
     credentials: true,
     maxAge: 600,
-  })
+  }),
 );
 
 app.get("/", (c) => {
-  return c.text("Hono server is running");
+  return c.json({
+    message: "Hono server is running",
+    docs: new URL("/api/auth/reference", c.req.url).href,
+  });
 });
 
 app.use(
@@ -44,34 +54,26 @@ app.use(
   trpcServer({
     endpoint: "/api/trpc",
     router: appRouter,
-  })
+  }),
 );
 
-app.all("/api/auth/*", (c) => auth.handler(c.req.raw));
-
-app.use("*", async (c, next) => {
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
-  console.log(session)
-  if (!session) {
-    c.set("user", null);
-    c.set("session", null);
-    await next();
-    return;
-  }
-  c.set("user", session.user);
-  c.set("session", session.session);
-  await next();
+app.on(["POST", "GET"], "/api/auth/**", (c) => {
+  return auth.handler(c.req.raw);
 });
 
-app.get("/session", (c) => {
-  const session = c.get("session");
-  const user = c.get("user");
+app.get("/session", async (c) => {
+  const session = await auth.api.getSession({
+    headers: c.req.raw.headers,
+  });
 
-  if (!user) {
-    return c.json({ message: "Not authenticated" }, 401);
+  if (!session || !session.user) {
+    return c.json({ message: "Invalid or expired session" }, 401);
   }
 
-  return c.json({ session, user });
+  return c.json({
+    user: session.user,
+    session: session.session,
+  });
 });
 
-export default app;
+export default app
