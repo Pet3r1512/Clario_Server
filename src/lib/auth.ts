@@ -20,7 +20,7 @@ export const auth = betterAuth({
     cookieOptions: {
         secure: true,
         httpOnly: true,
-        sameSite: "Lax",
+        sameSite: "None",
         path: "/",
     },
 
@@ -28,13 +28,13 @@ export const auth = betterAuth({
         cookies: {
             sessionToken: {
                 attributes: {
-                    sameSite: "Lax",
+                    sameSite: "None",
                     secure: true,
                 },
             },
         },
         defaultCookieAttributes: {
-            sameSite: "Lax",
+            sameSite: "None",
             secure: true,
         }
     },
