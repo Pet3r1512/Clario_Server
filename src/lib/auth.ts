@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 
 export const auth = betterAuth({
-    baseURL: process.env.BASE_URL || "http://localhost:8787",
+    baseURL: "https://clarioserver.peter1512-dev.workers.dev",
     basePath: "/api/auth",
     database: prismaAdapter(prisma, {
         provider: "postgresql",
@@ -11,7 +11,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["https://clario-web.pages.dev", "http://localhost:5173"],
+    trustedOrigins: ["https://clario-web.pages.dev"],
 
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days
