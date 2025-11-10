@@ -11,31 +11,32 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["https://clario-web.pages.dev", "http://localhost:5173"],
+    trustedOrigins: ["http://localhost:5173"],
 
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days
     },
 
     cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        secure: true,
+        httpOnly: true,
+        sameSite: "Lax",
         path: "/",
     },
 
     advanced: {
-        crossSubDomainCookies: {
-            enabled: true,
-        },
         cookies: {
             sessionToken: {
                 attributes: {
-                    sameSite: "none",
-                    secure: process.env.NODE_ENV === "production",
-                    partitioned: true,
+                    sameSite: "Lax",
+                    secure: true,
                 },
             },
         },
+        defaultCookieAttributes: {
+            sameSite: "Lax",
+            secure: true,
+        }
     },
 });
 
