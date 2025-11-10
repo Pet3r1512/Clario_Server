@@ -53,8 +53,10 @@ app.use(
   }),
 );
 
-app.on(["POST", "GET"], "/api/auth/**", (c) => {
-  return auth.handler(c.req.raw);
+app.on(["POST", "GET"], "/api/auth/**", async (c) => {
+  const response = await auth.handler(c.req.raw);
+
+  return c.newResponse(response.body, response);
 });
 
 app.get("/session", async (c) => {
