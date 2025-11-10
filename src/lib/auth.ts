@@ -11,7 +11,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["http://localhost:5173"],
+    trustedOrigins: ["https://clario-web.pages.dev", "http://localhost:5173"],
 
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days
