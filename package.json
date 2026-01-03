@@ -4,7 +4,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "postinstall": "prisma generate"
+    "postinstall": "dotenv -e .env -- prisma generate"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.5",
