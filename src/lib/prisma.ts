@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import { neonConfig, Pool } from '@neondatabase/serverless';
+import { neonConfig } from '@neondatabase/serverless';
 
 neonConfig.poolQueryViaFetch = true;
 
