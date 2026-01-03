@@ -40,12 +40,13 @@ app.get("/", (c) => {
 });
 
 app.use(
-  "/trpc/*",
+  "/api/trpc/*",
   trpcServer({
     endpoint: "/api/trpc",
     router: appRouter,
   }),
 );
+
 
 app.on(["POST", "GET"], "/api/auth/**", async (c) => {
   const response = await auth.handler(c.req.raw);
