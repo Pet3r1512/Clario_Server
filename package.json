@@ -11,7 +11,8 @@
     "@hono/trpc-server": "^0.4.0",
     "@neondatabase/serverless": "^1.0.1",
     "@prisma/adapter-neon": "^6.16.2",
-    "@prisma/client": "^6.16.2",
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
     "@trpc/client": "^11.4.3",
     "@trpc/server": "^11.4.3",
     "@types/dotenv": "^8.2.3",
@@ -26,7 +27,7 @@
   "devDependencies": {
     "@types/node": "^24.0.10",
     "@types/ws": "^8.18.1",
-    "prisma": "^6.16.2",
+    "prisma": "^7.2.0",
     "tsx": "^4.20.3",
     "wrangler": "^4.24.3"
   }
