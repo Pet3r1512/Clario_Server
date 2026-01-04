@@ -20,6 +20,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   categories    Category[]
+  balances      Balance[]
 
   @@map("user")
 }
@@ -102,4 +103,12 @@ enum SupportedCurrency {
   USD
   AUD
   VND
+}
+
+model Balance {
+  id       String            @id @default(uuid())
+  userId   String
+  amount   Decimal           @default(0) @db.Decimal(10, 2)
+  currency SupportedCurrency
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
