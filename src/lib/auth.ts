@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "./prisma";
+import prisma from "./prisma";
 
 export const auth = betterAuth({
     baseURL: "https://clarioserver.peter1512-dev.workers.dev",
