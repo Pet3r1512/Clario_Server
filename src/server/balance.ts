@@ -29,5 +29,30 @@ export const balancesRouter = router({
             status: 200,
             message: "Default balance is created"
         }
+    }),
+    getCurrentBalance: publicProcedure.input(z.object({
+        userId: z.string()
+    })).mutation(async ({ input }) => {
+        const { userId } = input
+
+        const currentBalance = await prisma.balance.findFirst({
+            where: {
+                userId: userId
+            }
+        })
+
+        if (!currentBalance) {
+            return {
+                status: 400,
+                error: "Cannot find balance"
+            }
+        }
+
+        return {
+            status: 200,
+            message: "Balance found",
+            balance: currentBalance.amount,
+            currentcy: currentBalance.currency
+        }
     })
 })
