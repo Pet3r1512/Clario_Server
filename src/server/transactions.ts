@@ -18,7 +18,6 @@ export const transactionsRouter = router({
                 userId: USER_ID,
                 amount: 1750.00,
                 description: "Salary for first half of October",
-                date: new Date("2025-09-29"),
                 categoryId: salaryCategory?.id,
 
             }
@@ -29,7 +28,6 @@ export const transactionsRouter = router({
                 userId: USER_ID,
                 amount: 10.5,
                 description: "Top Tea",
-                date: new Date("2025-09-30"),
                 categoryId: foodCategory?.id ?? undefined,
             }
         })
