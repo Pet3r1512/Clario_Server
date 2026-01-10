@@ -107,7 +107,7 @@ enum SupportedCurrency {
 
 model Balance {
   id       String            @id @default(uuid())
-  userId   String
+  userId   String            @unique
   amount   Decimal           @default(0) @db.Decimal(10, 2)
   currency SupportedCurrency
   user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
