@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { publicProcedure, router } from "./tRPC";
+import z from "zod";
+import { SupportedCurrency } from "@prisma/client";
 
 export const transactionsRouter = router({
     createDefaultCategories: publicProcedure.mutation(async ({ }) => {
@@ -18,7 +20,6 @@ export const transactionsRouter = router({
                 userId: USER_ID,
                 amount: 1750.00,
                 description: "Salary for first half of October",
-                date: new Date("2025-09-29"),
                 categoryId: salaryCategory?.id,
 
             }
@@ -29,7 +30,6 @@ export const transactionsRouter = router({
                 userId: USER_ID,
                 amount: 10.5,
                 description: "Top Tea",
-                date: new Date("2025-09-30"),
                 categoryId: foodCategory?.id ?? undefined,
             }
         })
@@ -38,5 +38,57 @@ export const transactionsRouter = router({
         const transactions = await prisma.transaction.findMany()
 
         return { transactions: transactions }
+    }),
+    addTransaction: publicProcedure.input(z.object({
+        userId: z.string(),
+        categoryId: z.number().optional(),
+        amount: z.number(),
+        currency: z.enum(SupportedCurrency).optional(),
+        description: z.string(),
+    })).mutation(async ({ input }) => {
+        const { userId, categoryId, amount, currency, description } = input
+
+        // get category
+        const category = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+            select: {
+                type: true
+            }
+        })
+
+        // add new transaction
+        const newTransaction = await prisma.transaction.create({
+            data: {
+                userId: userId,
+                categoryId: categoryId,
+                amount: amount,
+                currency: currency,
+                description: description,
+            }
+        })
+
+        // calculate transaction delta
+        const delta = category?.type === "INCOME" ? amount : - amount
+
+        // update balance
+        await prisma.balance.upsert({
+            where: {
+                userId
+            },
+            update: {
+                amount: {
+                    increment: delta
+                }
+            },
+            create: {
+                userId,
+                amount: delta,
+                currency: currency || "AUD"
+            }
+        })
+
+        return newTransaction
     })
 })

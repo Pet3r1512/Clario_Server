@@ -88,7 +88,6 @@ model Transaction {
   amount      Decimal           @db.Decimal(10, 2)
   currency    SupportedCurrency @default(AUD)
   description String?
-  date        DateTime
   createdAt   DateTime          @default(now())
   user        User              @relation(fields: [userId], references: [id])
   category    Category?         @relation(fields: [categoryId], references: [id])
@@ -107,7 +106,7 @@ enum SupportedCurrency {
 
 model Balance {
   id       String            @id @default(uuid())
-  userId   String
+  userId   String            @unique
   amount   Decimal           @default(0) @db.Decimal(10, 2)
   currency SupportedCurrency
   user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
