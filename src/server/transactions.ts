@@ -21,7 +21,6 @@ export const transactionsRouter = router({
                 amount: 1750.00,
                 description: "Salary for first half of October",
                 categoryId: salaryCategory?.id,
-
             }
         })
 
@@ -34,8 +33,20 @@ export const transactionsRouter = router({
             }
         })
     }),
-    getTransactions: publicProcedure.query(async ({ }) => {
-        const transactions = await prisma.transaction.findMany()
+    getTransactions: publicProcedure.input(z.object({
+        userId: z.string()
+    })).query(async ({ input }) => {
+        const { userId } = input
+
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                userId
+            },
+            omit: {
+                id: true,
+                userId: true
+            }
+        })
 
         return { transactions: transactions }
     }),
