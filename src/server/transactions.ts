@@ -43,6 +43,10 @@ export const transactionsRouter = router({
             where: {
                 userId
             },
+            omit: {
+                id: true,
+                userId: true
+            }
         })
 
         return { transactions: transactions }
