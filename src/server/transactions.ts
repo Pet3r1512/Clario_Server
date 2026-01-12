@@ -34,8 +34,16 @@ export const transactionsRouter = router({
             }
         })
     }),
-    getTransactions: publicProcedure.query(async ({ }) => {
-        const transactions = await prisma.transaction.findMany()
+    getTransactions: publicProcedure.input(z.object({
+        userId: z.string()
+    })).query(async ({ input }) => {
+        const { userId } = input
+
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                userId
+            },
+        })
 
         return { transactions: transactions }
     }),
