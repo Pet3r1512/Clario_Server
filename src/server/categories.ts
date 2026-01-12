@@ -68,4 +68,15 @@ export const categoriesRouter = router({
             total: defaultCategories.length,
         };
     }),
+    getGlobalCategories: publicProcedure.query(async () => {
+        const globalCategories = await prisma.category.findMany({
+            where: {
+                userId: null
+            },
+        })
+
+        return {
+            globalCategories: globalCategories
+        }
+    })
 });
