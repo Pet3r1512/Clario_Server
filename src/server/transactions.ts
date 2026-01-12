@@ -21,7 +21,6 @@ export const transactionsRouter = router({
                 amount: 1750.00,
                 description: "Salary for first half of October",
                 categoryId: salaryCategory?.id,
-
             }
         })
 
