@@ -73,6 +73,11 @@ export const categoriesRouter = router({
             where: {
                 userId: null
             },
+            omit: {
+                userId: true,
+                createdAt: true,
+                updatedAt: true
+            }
         })
 
         return {
