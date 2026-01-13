@@ -42,6 +42,7 @@ export const transactionsRouter = router({
             where: {
                 userId
             },
+            orderBy: { createdAt: "desc" },
             omit: {
                 id: true,
                 userId: true
