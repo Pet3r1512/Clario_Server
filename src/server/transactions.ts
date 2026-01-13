@@ -42,13 +42,19 @@ export const transactionsRouter = router({
             where: {
                 userId
             },
+            orderBy: { createdAt: "desc" },
             omit: {
                 id: true,
                 userId: true
             }
         })
 
-        return { transactions: transactions }
+        return transactions.map(tx => ({
+            categoryId: tx.categoryId,
+            amount: tx.amount,
+            currency: tx.currency,
+            date: tx.createdAt.toISOString(),
+        }));
     }),
     addTransaction: publicProcedure.input(z.object({
         userId: z.string(),
