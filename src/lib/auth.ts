@@ -25,21 +25,6 @@ export const auth = betterAuth({
         sameSite: "None",
         path: "/",
     },
-
-    advanced: {
-        cookies: {
-            sessionToken: {
-                attributes: {
-                    sameSite: "None",
-                    secure: true,
-                },
-            },
-        },
-        defaultCookieAttributes: {
-            sameSite: "None",
-            secure: true,
-        }
-    },
 });
 
 export default auth;
