@@ -26,21 +26,21 @@ export const auth = betterAuth({
         path: "/",
     },
     advanced: {
-        defaultCookieAttributes: {
-            sameSite: "none",
-            secure: true,
-            partitioned: true // New browser standards will mandate this for foreign cookies
-        },
         cookies: {
             sessionToken: {
                 attributes: {
-                    sameSite: "none",
+                    sameSite: "None",
                     secure: true,
-                    partitioned: true // New browser standards will mandate this for foreign cookies
-                }
-            }
+                    httpOnly: true
+                },
+            },
+        },
+        defaultCookieAttributes: {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
         }
-    }
+    },
 });
 
 export default auth;
