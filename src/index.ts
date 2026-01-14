@@ -74,7 +74,7 @@ app.get("/session", async (c) => {
     headers: c.req.raw.headers,
   });
 
-  if (!session || !session.user) {
+  if (!session) {
     return c.json({ message: "Invalid or expired session" }, 401);
   }
 
