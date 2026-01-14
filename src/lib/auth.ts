@@ -21,26 +21,18 @@ export const auth = betterAuth({
 
     cookieOptions: {
         secure: true,
-        httpOnly: true,
         sameSite: "None",
+        httpOnly: true,
         path: "/",
     },
     advanced: {
-        cookies: {
-            sessionToken: {
-                attributes: {
-                    sameSite: "None",
-                    secure: true,
-                    httpOnly: true
-                },
-            },
-        },
         defaultCookieAttributes: {
-            httpOnly: true,
-            sameSite: "None",
             secure: true,
-        }
+            sameSite: "None",
+            httpOnly: true,
+        },
     },
+
 });
 
 export default auth;
