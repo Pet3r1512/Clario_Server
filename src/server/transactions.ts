@@ -53,6 +53,7 @@ export const transactionsRouter = router({
             categoryId: tx.categoryId,
             amount: tx.amount,
             currency: tx.currency,
+            description: tx.description,
             date: tx.createdAt.toISOString(),
         }));
     }),
