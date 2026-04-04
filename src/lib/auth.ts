@@ -12,8 +12,9 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["https://clario-web.pages.dev"],
-    // trustedOrigins: ["http://localhost:5173", "http://192.168.50.225:5173"],
+    trustedOrigins: ["https://clario-web.pages.dev", "https://clariofinance.site"],
+    // trustedOrigins: ["http://localhost:5173"],
+
 
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days
