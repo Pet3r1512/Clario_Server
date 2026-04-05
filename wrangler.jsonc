@@ -8,10 +8,10 @@
     "NODE_ENV": "production",
     "PORT": "9999",
     "LOG_LEVEL": "info",
-    "BETTER_AUTH_URL": "https://clario-web.pages.dev",
-    "TRUSTED_ORIGIN": "https://clario-web.pages.dev",
-    "BASE_URL": "https://clarioserver.peter1512-dev.workers.dev"
-  }
+    "BETTER_AUTH_URL": "https://clariofinance.site",
+    "TRUSTED_ORIGIN": "https://clariofinance.site",
+    "BASE_URL": "https://api.clariofinance.site",
+  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
