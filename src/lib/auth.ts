@@ -12,7 +12,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["https://clario-web.pages.dev", "https://clariofinance.site"],
+    trustedOrigins: ["https://clario-web.pages.dev", "https://www.clariofinance.site"],
     // trustedOrigins: ["http://localhost:5173"],
 
 
