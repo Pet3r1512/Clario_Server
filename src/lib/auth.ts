@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 
 export const auth = betterAuth({
-    baseURL: "https://clarioserver.peter1512-dev.workers.dev",
+    baseURL: "https://api.clariofinance.site",
     // baseURL: "http://localhost:8787",
     basePath: "/api/auth",
     database: prismaAdapter(prisma, {
@@ -12,7 +12,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["https://clario-web.pages.dev", "https://clariofinance.site"],
+    trustedOrigins: ["https://clario-web.pages.dev", "https://www.clariofinance.site"],
     // trustedOrigins: ["http://localhost:5173"],
 
 
