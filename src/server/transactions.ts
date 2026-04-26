@@ -34,28 +34,41 @@ export const transactionsRouter = router({
         })
     }),
     getTransactions: publicProcedure.input(z.object({
-        userId: z.string()
+        userId: z.string(),
+        page: z.number()
     })).query(async ({ input }) => {
-        const { userId } = input
+        const { userId, page } = input
+
+        const PAGE_SIZE = 10
 
         const transactions = await prisma.transaction.findMany({
             where: {
                 userId
             },
             orderBy: { createdAt: "desc" },
-            omit: {
-                id: true,
-                userId: true
+            take: PAGE_SIZE,
+            skip: (page - 1) * PAGE_SIZE,
+            include: {
+                category: true
             }
         })
 
-        return transactions.map(tx => ({
-            categoryId: tx.categoryId,
-            amount: tx.amount,
-            currency: tx.currency,
-            description: tx.description,
-            date: tx.createdAt.toISOString(),
-        }));
+        const totalCount = await prisma.transaction.count({
+            where: { userId }
+        })
+
+        return {
+            transactions: transactions.map(tx => ({
+                id: tx.id,
+                userId: tx.userId,
+                categoryId: tx.categoryId,
+                amount: Number(tx.amount),
+                currency: tx.currency,
+                description: tx.description,
+                date: tx.createdAt.toISOString(),
+            })),
+            hasMore: page * PAGE_SIZE < totalCount
+        }
     }),
     addTransaction: publicProcedure.input(z.object({
         userId: z.string(),
