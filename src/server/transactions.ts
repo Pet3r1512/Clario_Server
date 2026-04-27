@@ -98,7 +98,7 @@ export const transactionsRouter = router({
                 amount: amount,
                 currency: currency,
                 description: description,
-                createdAt: createdAt
+                createdAt: createdAt || new Date().toISOString()
             }
         })
 
