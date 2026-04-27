@@ -76,7 +76,7 @@ export const transactionsRouter = router({
         amount: z.number(),
         currency: z.enum(SupportedCurrency).optional(),
         description: z.string(),
-        createdAt: z.string()
+        createdAt: z.string().optional()
     })).mutation(async ({ input }) => {
         const { userId, categoryId, amount, currency, description, createdAt } = input
 
