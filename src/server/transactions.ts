@@ -76,7 +76,7 @@ export const transactionsRouter = router({
         amount: z.number(),
         currency: z.enum(SupportedCurrency).optional(),
         description: z.string(),
-        createdAt: z.string()
+        createdAt: z.string().optional()
     })).mutation(async ({ input }) => {
         const { userId, categoryId, amount, currency, description, createdAt } = input
 
@@ -98,7 +98,7 @@ export const transactionsRouter = router({
                 amount: amount,
                 currency: currency,
                 description: description,
-                createdAt: createdAt
+                createdAt: createdAt || new Date().toISOString()
             }
         })
 
@@ -106,7 +106,7 @@ export const transactionsRouter = router({
         const delta = category?.type === "INCOME" ? amount : - amount
 
         // update balance
-        await prisma.balance.upsert({
+        const newBalance = await prisma.balance.upsert({
             where: {
                 userId
             },
@@ -122,6 +122,6 @@ export const transactionsRouter = router({
             }
         })
 
-        return newTransaction
+        return { newTransaction, newBalance: newBalance.amount }
     })
 })
