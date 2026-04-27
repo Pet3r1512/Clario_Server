@@ -106,7 +106,7 @@ export const transactionsRouter = router({
         const delta = category?.type === "INCOME" ? amount : - amount
 
         // update balance
-        await prisma.balance.upsert({
+        const newBalance = await prisma.balance.upsert({
             where: {
                 userId
             },
@@ -122,6 +122,6 @@ export const transactionsRouter = router({
             }
         })
 
-        return newTransaction
+        return { newTransaction, newBalance: newBalance.amount }
     })
 })
