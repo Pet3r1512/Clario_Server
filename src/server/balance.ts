@@ -51,7 +51,7 @@ export const balancesRouter = router({
         return {
             status: 200,
             message: "Balance found",
-            balance: currentBalance.amount,
+            balance: Number(currentBalance.amount),
             currentcy: currentBalance.currency
         }
     })
