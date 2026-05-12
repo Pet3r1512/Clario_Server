@@ -2,42 +2,52 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const auth = betterAuth({
-    baseURL: "https://api.clariofinance.site",
-    // baseURL: "http://localhost:8787",
+    baseURL: isProduction
+        ? "https://api.clariofinance.site"
+        : "http://localhost:8787",
+
     basePath: "/api/auth",
+
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
+
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: ["https://clario-web.pages.dev", "https://www.clariofinance.site"],
-    // trustedOrigins: ["http://localhost:5173"],
 
+    trustedOrigins: isProduction
+        ? ["https://www.clariofinance.site"]
+        : [
+            "http://localhost:5173",
+            "http://192.168.50.89:5173",
+        ],
 
     session: {
-        expiresIn: 60 * 60 * 24 * 7, // 7 days
+        expiresIn: 60 * 60 * 24 * 7,
+
         cookieCache: {
             enabled: true,
-            maxAge: 5 * 60 // Cache duration in seconds (5 minutes)
-        }
-    },
-
-    cookieOptions: {
-        secure: true,
-        sameSite: "None",
-        httpOnly: true,
-        path: "/",
-    },
-    advanced: {
-        defaultCookieAttributes: {
-            secure: true,
-            sameSite: "None",
-            httpOnly: true,
+            maxAge: 60 * 5,
         },
     },
 
+    advanced: {
+        crossSubDomainCookies: {
+            enabled: true,
+            domain: ".clariofinance.site",
+        },
+
+        defaultCookieAttributes: {
+            secure: true,
+            sameSite: "none",
+            httpOnly: true,
+            path: "/",
+        },
+    },
 });
 
 export default auth;
