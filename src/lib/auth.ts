@@ -20,7 +20,9 @@ export const auth = betterAuth({
     },
 
     trustedOrigins: isProduction
-        ? ["https://www.clariofinance.site"]
+        ? [
+            "https://www.clariofinance.site",
+        ]
         : [
             "http://localhost:5173",
             "http://192.168.50.89:5173",
