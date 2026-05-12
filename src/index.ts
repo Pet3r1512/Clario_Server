@@ -13,11 +13,14 @@ const app = new Hono<{
   };
 }>();
 
+const isProduction = env?.NODE_ENV === "production";
+
 app.use(
   "*",
   cors({
-    // origin: "https://www.clariofinance.site",
-    origin: ["http://localhost:5173", "http://192.168.50.89:5173"],
+    origin: isProduction
+      ? ["https://www.clariofinance.site", "https://clariofinance.site"]
+      : ["http://localhost:5173", "http://192.168.50.89:5173"],
     credentials: true,
     allowHeaders: [
       "Content-Type",
