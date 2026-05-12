@@ -48,6 +48,7 @@ app.use("*", async (c, next) => {
 
 
 app.get("/", (c) => {
+  console.log(process.env.NODE_ENV);
   return c.json({
     message: "Hono server is running",
     docs: new URL("/api/auth/reference", c.req.url).href,
