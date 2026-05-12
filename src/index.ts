@@ -4,6 +4,7 @@ import { trpcServer } from "@hono/trpc-server";
 import { appRouter } from "./server/_index";
 import auth from "./lib/auth";
 import "dotenv/config";
+import { env } from "./env";
 
 const app = new Hono<{
   Variables: {
@@ -50,7 +51,7 @@ app.use("*", async (c, next) => {
 app.get("/", (c) => {
   return c.json({
     message: "Hono server is running",
-    env: process.env.NODE_ENV,
+    env: env?.NODE_ENV,
     docs: new URL("/api/auth/reference", c.req.url).href,
   });
 });

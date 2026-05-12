@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
+import { env } from "@/env";
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = env?.NODE_ENV === "production";
 
 export const auth = betterAuth({
     baseURL: isProduction
