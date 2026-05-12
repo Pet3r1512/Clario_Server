@@ -15,8 +15,8 @@ const app = new Hono<{
 app.use(
   "*",
   cors({
-    origin: "https://www.clariofinance.site",
-    // origin: "http://localhost:5173",
+    // origin: "https://www.clariofinance.site",
+    origin: ["http://localhost:5173", "http://192.168.50.89:5173"],
     credentials: true,
     allowHeaders: [
       "Content-Type",
@@ -48,9 +48,9 @@ app.use("*", async (c, next) => {
 
 
 app.get("/", (c) => {
-  console.log(process.env.NODE_ENV);
   return c.json({
     message: "Hono server is running",
+    env: process.env.NODE_ENV,
     docs: new URL("/api/auth/reference", c.req.url).href,
   });
 });
