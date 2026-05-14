@@ -14,13 +14,14 @@ const app = new Hono<{
 }>();
 
 const isProduction = env?.NODE_ENV === "production";
+const origins = isProduction
+  ? ["https://www.clariofinance.site", "https://clariofinance.site"]
+  : ["http://localhost:5173", "http://192.168.50.89:5173"]
 
 app.use(
   "*",
   cors({
-    origin: isProduction
-      ? ["https://www.clariofinance.site", "https://clariofinance.site"]
-      : ["http://localhost:5173", "http://192.168.50.89:5173"],
+    origin: origins,
     credentials: true,
     allowHeaders: [
       "Content-Type",
@@ -55,6 +56,7 @@ app.get("/", (c) => {
   return c.json({
     message: "Hono server is running",
     env: env?.NODE_ENV,
+    origins: origins,
     docs: new URL("/api/auth/reference", c.req.url).href,
   });
 });
