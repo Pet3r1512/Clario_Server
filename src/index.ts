@@ -59,19 +59,41 @@ app.get("/", (c) => {
   });
 });
 
-app.use(
-  "/api/trpc/*",
-  trpcServer({
-    endpoint: "/api/trpc",
-    router: appRouter,
-  }),
-);
+app.options("/api/auth/**", (c) => {
+  const requestOrigin = c.req.header("Origin");
+  const trustedOrigins = isProduction
+    ? ["https://www.clariofinance.site", "https://clariofinance.site"]
+    : ["http://localhost:5173", "http://192.168.50.89:5173"];
 
+  if (requestOrigin && trustedOrigins.includes(requestOrigin)) {
+    c.header("Access-Control-Allow-Origin", requestOrigin);
+    c.header("Access-Control-Allow-Credentials", "true");
+    c.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    c.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    c.header("Vary", "Origin");
+  }
+
+  return c.body(null, 204);
+});
 
 app.on(["POST", "GET"], "/api/auth/**", async (c) => {
   const response = await auth.handler(c.req.raw);
 
-  return c.newResponse(response.body, response);
+  const newHeaders = new Headers(response.headers);
+  const requestOrigin = c.req.header("Origin");
+  const trustedOrigins = isProduction
+    ? ["https://www.clariofinance.site", "https://clariofinance.site"]
+    : ["http://localhost:5173", "http://192.168.50.89:5173"];
+
+  if (requestOrigin && trustedOrigins.includes(requestOrigin)) {
+    newHeaders.set("Access-Control-Allow-Origin", requestOrigin);
+    newHeaders.set("Access-Control-Allow-Credentials", "true");
+    newHeaders.set("Vary", "Origin");
+  }
+
+  return c.newResponse(response.body, response.status as any,
+    Object.fromEntries(newHeaders.entries())
+  );
 });
 
 app.get("/session", async (c) => {
@@ -88,5 +110,13 @@ app.get("/session", async (c) => {
     session: session.session,
   });
 });
+
+app.use(
+  "/api/trpc/*",
+  trpcServer({
+    endpoint: "/api/trpc",
+    router: appRouter,
+  }),
+);
 
 export default app
