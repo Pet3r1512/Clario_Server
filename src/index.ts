@@ -14,13 +14,14 @@ const app = new Hono<{
 }>();
 
 const isProduction = env?.NODE_ENV === "production";
+const origins = isProduction
+  ? ["https://www.clariofinance.site", "https://clariofinance.site"]
+  : ["http://localhost:5173", "http://192.168.50.89:5173"]
 
 app.use(
   "*",
   cors({
-    origin: isProduction
-      ? ["https://www.clariofinance.site", "https://clariofinance.site"]
-      : ["http://localhost:5173"],
+    origin: origins,
     credentials: true,
     allowHeaders: [
       "Content-Type",
@@ -55,45 +56,24 @@ app.get("/", (c) => {
   return c.json({
     message: "Hono server is running",
     env: env?.NODE_ENV,
+    origins: origins,
     docs: new URL("/api/auth/reference", c.req.url).href,
   });
 });
 
-app.options("/api/auth/**", (c) => {
-  const requestOrigin = c.req.header("Origin");
-  const trustedOrigins = isProduction
-    ? ["https://www.clariofinance.site", "https://clariofinance.site"]
-    : ["http://localhost:5173", "http://192.168.50.89:5173"];
+app.use(
+  "/api/trpc/*",
+  trpcServer({
+    endpoint: "/api/trpc",
+    router: appRouter,
+  }),
+);
 
-  if (requestOrigin && trustedOrigins.includes(requestOrigin)) {
-    c.header("Access-Control-Allow-Origin", requestOrigin);
-    c.header("Access-Control-Allow-Credentials", "true");
-    c.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    c.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    c.header("Vary", "Origin");
-  }
-
-  return c.body(null, 204);
-});
 
 app.on(["POST", "GET"], "/api/auth/**", async (c) => {
   const response = await auth.handler(c.req.raw);
 
-  const newHeaders = new Headers(response.headers);
-  const requestOrigin = c.req.header("Origin");
-  const trustedOrigins = isProduction
-    ? ["https://www.clariofinance.site", "https://clariofinance.site"]
-    : ["http://localhost:5173", "http://192.168.50.89:5173"];
-
-  if (requestOrigin && trustedOrigins.includes(requestOrigin)) {
-    newHeaders.set("Access-Control-Allow-Origin", requestOrigin);
-    newHeaders.set("Access-Control-Allow-Credentials", "true");
-    newHeaders.set("Vary", "Origin");
-  }
-
-  return c.newResponse(response.body, response.status as any,
-    Object.fromEntries(newHeaders.entries())
-  );
+  return c.newResponse(response.body, response);
 });
 
 app.get("/session", async (c) => {
@@ -110,13 +90,5 @@ app.get("/session", async (c) => {
     session: session.session,
   });
 });
-
-app.use(
-  "/api/trpc/*",
-  trpcServer({
-    endpoint: "/api/trpc",
-    router: appRouter,
-  }),
-);
 
 export default app

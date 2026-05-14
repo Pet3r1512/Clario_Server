@@ -1,27 +1,18 @@
-// prisma.ts
-import { PrismaClient } from "@prisma/client"
-import { PrismaNeon } from "@prisma/adapter-neon"
-import { neonConfig } from "@neondatabase/serverless"
+import { PrismaClient } from "../../prisma/generated";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 
-neonConfig.poolQueryViaFetch = true
+const adapter = new PrismaLibSql({
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
+});
 
-const connectionString = process.env.DATABASE_URL
-if (!connectionString) {
-    throw new Error("DATABASE_URL is not defined")
-}
-
-const adapter = new PrismaNeon({ connectionString })
-
-let client: PrismaClient | null = null
+let prisma: PrismaClient | null = null;
 
 export function getPrismaClient() {
-    if (!client) {
-        client = new PrismaClient({
-            adapter,
-            log: ["error"],
-        })
+    if (!prisma) {
+        prisma = new PrismaClient({ adapter });
     }
-    return client
+    return prisma;
 }
 
-export default getPrismaClient()
+export default getPrismaClient();
