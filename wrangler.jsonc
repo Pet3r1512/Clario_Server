@@ -12,6 +12,9 @@
     "TRUSTED_ORIGIN": "https://clariofinance.site",
     "BASE_URL": "https://api.clariofinance.site",
   },
+  "alias": {
+    ".prisma/client/default": "./src/generated/prisma/client/default",
+  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
