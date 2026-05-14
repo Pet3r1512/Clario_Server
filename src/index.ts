@@ -5,6 +5,7 @@ import { appRouter } from "./server/_index";
 import auth from "./lib/auth";
 import "dotenv/config";
 import { env } from "./env";
+import type { ScheduledEvent, ExecutionContext } from "@cloudflare/workers-types";
 
 const app = new Hono<{
   Variables: {
@@ -96,4 +97,13 @@ app.get("/session", async (c) => {
   });
 });
 
-export default app
+app.get("/api/ping", (c) => c.json({ ok: true }));
+
+export default {
+  fetch: app.fetch,
+  async scheduled(event: ScheduledEvent, env: unknown, ctx: ExecutionContext) {
+    ctx.waitUntil(
+      fetch("https://api.clariofinance.site/api/ping")
+    );
+  },
+};
