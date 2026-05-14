@@ -16,6 +16,9 @@
     ".prisma/client/default": "./prisma/generated/default",
     "@prisma/client-runtime-utils": "./node_modules/@prisma/client-runtime-utils",
   },
+  "triggers": {
+    "crons": ["*/5 * * * *"],
+  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
