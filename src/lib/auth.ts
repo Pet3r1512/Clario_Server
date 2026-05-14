@@ -21,32 +21,32 @@ export const auth = betterAuth({
     },
 
     trustedOrigins: isProduction
-        ? [
-            "https://www.clariofinance.site",
-        ]
-        : [
-            "http://localhost:5173",
-            "http://192.168.50.89:5173",
-        ],
+        ? ["https://www.clariofinance.site"]
+        : ["http://localhost:5173", "http://192.168.50.89:5173"],
 
     session: {
         expiresIn: 60 * 60 * 24 * 7,
-
         cookieCache: {
             enabled: true,
             maxAge: 60 * 5,
         },
     },
 
-    advanced: {
+    advanced: isProduction ? {
         crossSubDomainCookies: {
             enabled: true,
             domain: ".clariofinance.site",
         },
-
         defaultCookieAttributes: {
             secure: true,
             sameSite: "none",
+            httpOnly: true,
+            path: "/",
+        },
+    } : {
+        defaultCookieAttributes: {
+            secure: false,
+            sameSite: "lax",
             httpOnly: true,
             path: "/",
         },
