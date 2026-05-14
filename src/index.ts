@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: isProduction
       ? ["https://www.clariofinance.site", "https://clariofinance.site"]
-      : ["http://localhost:5173", "http://192.168.50.89:5173"],
+      : ["http://localhost:5173"],
     credentials: true,
     allowHeaders: [
       "Content-Type",
