@@ -1,11 +1,10 @@
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "client"
-  runtime    = "workerd"
+  provider = "prisma-client-js"
+  output   = "../generated/prisma/client"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model User {
@@ -85,7 +84,7 @@ model Transaction {
   id          String            @id @default(cuid())
   userId      String
   categoryId  Int?
-  amount      Decimal           @db.Decimal(10, 2)
+  amount      Decimal
   currency    SupportedCurrency @default(AUD)
   description String?
   createdAt   DateTime          @default(now())
@@ -107,7 +106,7 @@ enum SupportedCurrency {
 model Balance {
   id       String            @id @default(uuid())
   userId   String            @unique
-  amount   Decimal           @default(0) @db.Decimal(10, 2)
+  amount   Decimal           @default(0)
   currency SupportedCurrency
   user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
