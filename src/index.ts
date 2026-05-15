@@ -22,12 +22,9 @@ const origins = isProduction
 app.use(
   "*",
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:8787",
-      "http://192.168.50.89:5173",
-      "https://www.clariofinance.site",
-    ],
+    origin: isProduction
+      ? ["https://www.clariofinance.site", "https://clariofinance.site"]
+      : ["http://localhost:5173", "http://192.168.50.89:5173"],
     credentials: true,
     allowHeaders: [
       "Content-Type",
