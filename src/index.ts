@@ -27,15 +27,6 @@ app.use(
       return allowed.includes(origin) ? origin : null;
     },
     credentials: true,
-    allowHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-Requested-With",
-      "Accept",
-      "Origin",
-      "User-Agent",
-      "Referer",
-    ],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length", "Set-Cookie"],
     maxAge: 600,
