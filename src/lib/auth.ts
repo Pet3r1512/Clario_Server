@@ -2,8 +2,13 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const auth = betterAuth({
-    baseURL: "https://api.clariofinance.site",
+    baseURL: isProduction
+        ? "https://api.clariofinance.site"
+        : "http://localhost:8787",
+
     basePath: "/api/auth",
 
     database: prismaAdapter(prisma, {
@@ -29,7 +34,7 @@ export const auth = betterAuth({
         },
     },
 
-    advanced: {
+    advanced: isProduction ? {
         crossSubDomainCookies: {
             enabled: true,
             domain: ".clariofinance.site",
@@ -37,6 +42,13 @@ export const auth = betterAuth({
         defaultCookieAttributes: {
             secure: true,
             sameSite: "none",
+            httpOnly: true,
+            path: "/",
+        },
+    } : {
+        defaultCookieAttributes: {
+            secure: false,
+            sameSite: "lax",
             httpOnly: true,
             path: "/",
         },
