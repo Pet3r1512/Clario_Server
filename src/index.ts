@@ -6,6 +6,7 @@ import auth from "./lib/auth";
 import "dotenv/config";
 import { env } from "./env";
 import type { ScheduledEvent, ExecutionContext } from "@cloudflare/workers-types";
+import prisma from "./lib/prisma";
 
 const app = new Hono<{
   Variables: {
@@ -85,7 +86,14 @@ app.get("/session", async (c) => {
   });
 });
 
-app.get("/api/ping", (c) => c.json({ ok: true }));
+app.get("/api/ping", async (c) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return c.json({ ok: true, db: "warm" });
+  } catch (e) {
+    return c.json({ ok: true, db: "cold" }, 500);
+  }
+});
 
 export default {
   fetch: app.fetch,
